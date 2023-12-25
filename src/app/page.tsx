@@ -28,6 +28,12 @@ const Home = () => {
       <div>
         <Link href="/error-boundry-reset">Error Boundry with reset</Link>
       </div>
+      <div>
+        <Link href="/slot">Slots / Parallel-routes</Link>
+      </div>
+      <div>
+        <Link href="/auth-with-slot">Auth with slots</Link>
+      </div>
     </>
   );
 };

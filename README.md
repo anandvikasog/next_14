@@ -108,3 +108,89 @@ Levels of files (in a folder) - *parent to child*
 default component in error.js file also receives a "**reset**" function, which reloads the page.tsx. This may be helpful if re-loading the page.tsx could resolve the error.
 
 *Since layout.tsx is rendered as a parent of error.tsx the error occured in layout.tsx is not handled by error.tsx (in the same folder). In this case the error will be cought by the one which is located in the uper level of folder hierarchy.*
+
+## Slots / parallel-routes
+These are the folders, whose name is prefix with `@`symbol, and has the ability to be rendered at a same route and be passed at a same `layout.tsx` as a prop.
+***Example:***
+	
+
+    |-layout.tsx
+    |-page.tsx
+    |-@section1
+    |	-page.tsx
+    |-@section2
+    |	-page.tsx
+    |-@section2
+    |	-page.tsx
+        
+in **layout.tsx**
+
+    export default function Layout({
+      children,
+      section1,
+      section2,
+      section3,
+    }: {
+      children: React.ReactNode;
+      section1: React.ReactNode;
+      section2: React.ReactNode;
+      section3: React.ReactNode;
+    }) {
+      return (
+        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {section1}
+            {children}
+            {section2}
+          </div>
+          <div>{section3}</div>
+        </div>
+      );
+    }
+
+ - A clear benefit of parallel-routes is their ability to split a single layout into multiple slots, making the code more manageable.
+ - A parallel route behaves same as a normal route. It can have it's own "**error**", "**loading**", "**layout**", "**template**" or other files that a normal route has, and would behave normally as expected.
+ - Each **slot/ parallel-route** can essentially function as a mini application, complete with it's own navigation and state management.
+
+**Example:**
+
+    |-layout.tsx
+    |-page.tsx
+    |-child
+    |	-page.tsx
+    |-@section1
+    |	-page.tsx
+    |	-child
+    |		-page.tsx
+    |-@section2
+    |	-page.tsx
+    |-@section2
+    |	-page.tsx
+
+*Here the two slots "section1" and "children" (i.e, page.tsx of root level) have nested route which is "/child". So, at the rote "/child" the "section1" and "children" will be replaced by the corresponding nested route but "section2" and "section3" will remain same as before because they do not have "child" nested page under them.* 
+
+*In this case if we reload the browser at "/child" route, next.js will search for the "child" route in all the slots at that level, and if any slot fail to provide that route then next.js will render a 404 page for the whole "/child" route.*
+
+*To handle this scenario we need to define "default.tsx" file in "section2" and section3" slot.  This will be rendered as a fallback if no route is matched under the slot.*
+
+**Example**:
+  
+
+	    |-layout.tsx
+        |-page.tsx
+        |-child
+        |	-page.tsx
+        |-@section1
+        |	-page.tsx
+        |	-child
+        |		-page.tsx
+        |-@section2
+        |	-page.tsx
+        |	-default.tsx
+        |-@section2
+        |	-page.tsx
+        |	-default.tsx
+
+## Intercepting routes ??
+Didn't find useful as of now! please study at below link if needed.
+[https://www.youtube.com/watch?v=nr_kRfTJfKc](https://www.youtube.com/watch?v=nr_kRfTJfKc)
