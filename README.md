@@ -194,3 +194,52 @@ in **layout.tsx**
 ## Intercepting routes ??
 Didn't find useful as of now! please study at below link if needed.
 [https://www.youtube.com/watch?v=nr_kRfTJfKc](https://www.youtube.com/watch?v=nr_kRfTJfKc)
+
+# Route handlers --------------------------
+
+ - Next JS has builtin support for handling API routes. 
+ - For this we need to write our API login in file named `route.ts`
+ - The path of **route.ts** is defined in same manner as of **page.ts**, and it supports all the above features and conventions related to folder structure.
+ - if a folder contains both **page.ts** and **route.ts** then **route.ts** will given priority.
+
+## HTTP methods in next route handlers
+in route.ts file we can use `GET()`, `POST()`, `PATCH()`, `DELETE()` methods to make appropriate API route.
+
+### redirects in route handlers
+We can also use `redirect()` method in route.ts to perform redirects to any page or route within the application.
+
+## Reading/Setting headers and routes in route handlers
+
+    import { NextRequest } from "next/server";
+    import { headers, cookies } from "next/headers";
+    
+    export async function GET(request: NextRequest) {
+      // READING HEADERS ##################################
+    
+      // METHOD 1 -----------------------------------------
+      // const requestHeaders = new Headers(request.headers);
+      // const auth = requestHeaders.get("Authorization");
+      // const themeCookie = request.cookies.get("theme");
+    
+      // METHOD 2 -----------------------------------------
+      const requestHeaders = headers();
+      const auth = requestHeaders.get("Authorization");
+      const themeCookie = cookies().get("theme");
+    
+      console.log("header data", {
+        auth,
+        themeCookie,
+      });
+    
+      // SETTING HEADERS ##################################
+    
+      // SETTING COOKIE #1 --------------------------------
+      // cookies().set("theme", "dark");
+    
+      return new Response("<h1>setting headers<h1/>", {
+        headers: {
+          "Content-Type": "text/html",
+          "Set-Cookie": "theme=dark",
+        },
+      });
+    }
