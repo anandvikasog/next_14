@@ -8,7 +8,7 @@ const Page = () => {
   console.log(randomNumber);
 
   if (randomNumber === 1) {
-    throw new Error("Custom errom");
+    // throw new Error("Custom errom");
   }
   let data;
   return <div>Hello Error page</div>;
